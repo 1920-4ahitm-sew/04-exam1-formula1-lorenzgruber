@@ -1,6 +1,7 @@
 package at.htl.formula1.boundary;
 
 import at.htl.formula1.entity.Driver;
+import at.htl.formula1.entity.Race;
 import at.htl.formula1.entity.Result;
 
 import javax.annotation.PostConstruct;
@@ -11,10 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.StringReader;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Path("result")
 public class ResultsEndpoint {
@@ -58,5 +56,17 @@ public class ResultsEndpoint {
 
 
     // Ergänzen Sie Ihre eigenen Methoden ...
+
+    @GET
+    @Path("racewon")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Race> findRacedWonByTeam(@QueryParam("team") String team){
+        List<Result> results = em.createNamedQuery("Result.getRacesWonByTeam", Result.class).setParameter("NAME", team).getResultList();
+        List<Race> races = new LinkedList<>();
+        for (Result result : results) {
+            races.add(result.getRace());
+        }
+        return races;
+    }
 
 }
