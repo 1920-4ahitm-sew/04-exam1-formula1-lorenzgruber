@@ -1,28 +1,47 @@
 package at.htl.formula1.boundary;
 
 import at.htl.formula1.entity.Driver;
+import at.htl.formula1.entity.Result;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import javax.annotation.PostConstruct;
+import javax.json.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.StringReader;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-
+@Path("result")
 public class ResultsEndpoint {
 
+    @PersistenceContext
+    EntityManager em;
+
+    @PostConstruct
+    public void init(){ }
 
     /**
      * @param name als QueryParam einzulesen
      * @return JsonObject
      */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name")
     public JsonObject getPointsSumOfDriver(
-            String name
+            @QueryParam("name") String name
     ) {
-        return null;
+        List<Result> results = em.createNamedQuery("Result.getByDriverName", Result.class).setParameter("NAME", name).getResultList();
+        int total = 0;
+        for (Result result : results) {
+            total += result.getPoints();
+        }
+
+        return Json.createObjectBuilder().add("driver", name).add("total", total). build();
     }
 
     /**

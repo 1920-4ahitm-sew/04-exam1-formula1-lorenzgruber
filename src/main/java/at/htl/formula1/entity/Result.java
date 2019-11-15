@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "F1_RESULT")
+@NamedQuery(name = "Result.getByDriverName", query = "select r from Result r where r.driver.name = :NAME")
 public class Result {
 
     @Transient
