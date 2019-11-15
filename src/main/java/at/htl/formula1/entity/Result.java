@@ -12,7 +12,8 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "Result.getByDriverName", query = "select r from Result r where r.driver.name = :NAME"),
         @NamedQuery(name = "Result.getRaceWinner", query = "select r from Result r where r.race.country = :COUNTRY and r.position = 1"),
-        @NamedQuery(name = "Result.getRacesWonByTeam", query = "select r from Result r where r.driver.team.name = :NAME and r.position = 1")
+        @NamedQuery(name = "Result.getRacesWonByTeam", query = "select r from Result r where r.driver.team.name = :NAME and r.position = 1"),
+        @NamedQuery(name = "Result.getByDriverId", query = "select r from Result r where r.driver.id = :ID")
 })
 
 public class Result {

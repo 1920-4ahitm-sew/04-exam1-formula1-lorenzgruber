@@ -69,4 +69,21 @@ public class ResultsEndpoint {
         return races;
     }
 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("all")
+    public List<JsonObject> getDrivers(){
+        List<JsonObject> driverPoints = new LinkedList<>();
+        List<Driver> drivers = em.createNamedQuery("Driver.findAll", Driver.class).getResultList();
+        for (Driver driver : drivers) {
+            int total = 0;
+            List<Result> results = em.createNamedQuery("Result.getByDriverId", Result.class).setParameter("ID", driver.getId()).getResultList();
+            for (Result result : results) {
+                total += result.getPoints();
+            }
+            driverPoints.add(Json.createObjectBuilder().add("driver", driver.getName()).add("total", total). build());
+        }
+        return driverPoints;
+    }
 }

@@ -9,7 +9,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "F1_DRIVER")
-@NamedQuery(name = "Driver.getByName", query = "select d from Driver d where d.name = :NAME")
+@NamedQueries({
+        @NamedQuery(name = "Driver.getByName", query = "select d from Driver d where d.name = :NAME"),
+        @NamedQuery(name = "Driver.findAll", query = "select d from Driver d")
+})
+
 public class Driver {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
