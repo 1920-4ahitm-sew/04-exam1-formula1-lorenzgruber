@@ -73,7 +73,7 @@ public class ResultsEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all")
-    public List<JsonObject> getDrivers(){
+    public List<JsonObject> getDriversWithPoints(){
         List<JsonObject> driverPoints = new LinkedList<>();
         List<Driver> drivers = em.createNamedQuery("Driver.findAll", Driver.class).getResultList();
         for (Driver driver : drivers) {
