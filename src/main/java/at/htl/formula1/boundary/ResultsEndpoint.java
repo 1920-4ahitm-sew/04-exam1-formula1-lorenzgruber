@@ -45,11 +45,15 @@ public class ResultsEndpoint {
     }
 
     /**
-     * @param id des Rennens
+     * @param country des Rennens
      * @return
      */
-    public Response findWinnerOfRace(long id) {
-        return null;
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/winner/{country}")
+    public Response findWinnerOfRace(@PathParam("country") String country) {
+        Result result = em.createNamedQuery("Result.getRaceWinner", Result.class).setParameter("COUNTRY", country).getSingleResult();
+        return Response.ok(result).build();
     }
 
 
