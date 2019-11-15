@@ -8,6 +8,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.client.Client;
@@ -60,7 +61,7 @@ public class ResultsRestClient {
     void persistResult(JsonArray resultsJson) {
         for (JsonValue jsonValue : resultsJson) {
             JsonObject resultJson = jsonValue.asJsonObject();
-            Race race = em.find(Race.class, resultJson.getInt("raceNo"));
+            Race race = em.find(Race.class, Integer.toUnsignedLong(resultJson.getInt("raceNo")));
             int position = resultJson.getInt("position");
             Driver driver = em.createNamedQuery("Driver.getByName", Driver.class).setParameter("NAME", resultJson.getString("driverFullName")).getSingleResult();
             Result result = new Result(race, position, driver);

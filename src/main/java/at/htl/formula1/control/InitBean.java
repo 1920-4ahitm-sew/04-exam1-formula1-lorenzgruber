@@ -22,10 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
 @ApplicationScoped
+@Transactional
 public class InitBean {
 
     private static final String TEAM_FILE_NAME = "teams.csv";
@@ -43,7 +45,6 @@ public class InitBean {
         readTeamsAndDriversFromFile(TEAM_FILE_NAME);
         readRacesFromFile(RACES_FILE_NAME);
         client.readResultsFromEndpoint();
-
     }
 
     /**
@@ -51,6 +52,7 @@ public class InitBean {
      *
      * @param racesFileName
      */
+    @Transactional
     private void readRacesFromFile(String racesFileName) {
         File file = new File(getClass().getClassLoader().getResource(racesFileName).getFile());
 
@@ -58,8 +60,9 @@ public class InitBean {
             scanner.nextLine();
             while(scanner.hasNextLine()){
                 String rows[] = scanner.nextLine().split(";");
-                Race race = new Race(Long.parseLong(rows[0]), rows[1], LocalDate.parse(rows[2]));
-                //em.persist(race);
+                LocalDate ld = LocalDate.parse(rows[2], DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                Race race = new Race(Long.parseLong(rows[0]), rows[1], ld);
+                em.persist(race);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -74,15 +77,14 @@ public class InitBean {
      *
      * @param teamFileName
      */
+    @Transactional
     private void readTeamsAndDriversFromFile(String teamFileName) {
         File file = new File(getClass().getClassLoader().getResource(teamFileName).getFile());
 
         try(Scanner scanner = new Scanner(file)) {
             scanner.nextLine();
             while(scanner.hasNextLine()){
-                String rows[] = scanner.nextLine().split(";");
-                Team team = new Team(rows[0]);
-                //em.persist(team);
+               persistTeamAndDrivers(scanner.nextLine().split(";"));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -101,6 +103,21 @@ public class InitBean {
      */
 
     private void persistTeamAndDrivers(String[] line) {
+
+        Team team = null;
+        try{
+            team = em.createNamedQuery("Team.getByName", Team.class).setParameter("NAME", line[0]).getSingleResult();
+        }catch(NoResultException e){}
+
+        if(team == null){
+            Team t = new Team(line[0]);
+            em.persist(t);
+            Driver driver1 = new Driver(line[1], t);
+            Driver driver2 = new Driver(line[2], t);
+            em.persist(driver1);
+            em.persist(driver2);
+        }
+
 
     }
 

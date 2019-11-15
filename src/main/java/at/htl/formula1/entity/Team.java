@@ -8,9 +8,11 @@ import javax.persistence.*;
  * The id's are assigned by the database.
  */
 @Entity
+@Table(name = "F1_TEAM")
+@NamedQuery(name = "Team.getByName", query = "select t from Team t where t.name = :NAME")
 public class Team {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 

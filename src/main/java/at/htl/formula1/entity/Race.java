@@ -11,6 +11,7 @@ import java.time.LocalDate;
  * The id's are not assigned by the database. The id's are given.
  */
 @Entity
+@Table(name = "F1_RACE")
 public class Race {
 
     @Id
