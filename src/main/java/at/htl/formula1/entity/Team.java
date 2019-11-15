@@ -7,8 +7,10 @@ import javax.persistence.*;
  * <p>
  * The id's are assigned by the database.
  */
+@Entity
 public class Team {
 
+    @Id
     private Long id;
     private String name;
 
