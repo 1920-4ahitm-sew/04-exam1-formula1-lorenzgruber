@@ -13,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 @ApplicationScoped
@@ -49,7 +52,18 @@ public class InitBean {
      * @param racesFileName
      */
     private void readRacesFromFile(String racesFileName) {
+        File file = new File(getClass().getClassLoader().getResource(racesFileName).getFile());
 
+        try(Scanner scanner = new Scanner(file)) {
+            scanner.nextLine();
+            while(scanner.hasNextLine()){
+                String rows[] = scanner.nextLine().split(";");
+                Race race = new Race(Long.parseLong(rows[0]), rows[1], LocalDate.parse(rows[2]));
+                //em.persist(race);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -61,7 +75,18 @@ public class InitBean {
      * @param teamFileName
      */
     private void readTeamsAndDriversFromFile(String teamFileName) {
+        File file = new File(getClass().getClassLoader().getResource(teamFileName).getFile());
 
+        try(Scanner scanner = new Scanner(file)) {
+            scanner.nextLine();
+            while(scanner.hasNextLine()){
+                String rows[] = scanner.nextLine().split(";");
+                Team team = new Team(rows[0]);
+                //em.persist(team);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
