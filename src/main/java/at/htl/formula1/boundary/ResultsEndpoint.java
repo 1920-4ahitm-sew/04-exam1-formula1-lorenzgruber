@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.io.StringReader;
 import java.util.*;
 
-@Path("result")
+@Path("results")
 public class ResultsEndpoint {
 
     @PersistenceContext
@@ -29,7 +29,7 @@ public class ResultsEndpoint {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("name")
+    @Path("/")
     public JsonObject getPointsSumOfDriver(
             @QueryParam("name") String name
     ) {
@@ -58,7 +58,7 @@ public class ResultsEndpoint {
     // Ergänzen Sie Ihre eigenen Methoden ...
 
     @GET
-    @Path("racewon")
+    @Path("raceswon")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Race> findRacedWonByTeam(@QueryParam("team") String team){
         List<Result> results = em.createNamedQuery("Result.getRacesWonByTeam", Result.class).setParameter("NAME", team).getResultList();
