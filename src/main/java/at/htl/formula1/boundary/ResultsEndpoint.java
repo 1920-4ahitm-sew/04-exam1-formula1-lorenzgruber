@@ -50,8 +50,8 @@ public class ResultsEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/winner/{country}")
     public Response findWinnerOfRace(@PathParam("country") String country) {
-        Result result = em.createNamedQuery("Result.getRaceWinner", Result.class).setParameter("COUNTRY", country).getSingleResult();
-        return Response.ok(result).build();
+        Driver driver = em.createNamedQuery("Result.getRaceWinner", Result.class).setParameter("COUNTRY", country).getSingleResult().getDriver();
+        return Response.ok(driver).build();
     }
 
 

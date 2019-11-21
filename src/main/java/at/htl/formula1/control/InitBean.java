@@ -56,7 +56,7 @@ public class InitBean {
     private void readRacesFromFile(String racesFileName) {
         File file = new File(getClass().getClassLoader().getResource(racesFileName).getFile());
 
-        try(Scanner scanner = new Scanner(file)) {
+        try(Scanner scanner = new Scanner(file, "UTF-8")) {
             scanner.nextLine();
             while(scanner.hasNextLine()){
                 String rows[] = scanner.nextLine().split(";");
@@ -81,7 +81,7 @@ public class InitBean {
     private void readTeamsAndDriversFromFile(String teamFileName) {
         File file = new File(getClass().getClassLoader().getResource(teamFileName).getFile());
 
-        try(Scanner scanner = new Scanner(file)) {
+        try(Scanner scanner = new Scanner(file, "UTF-8")) {
             scanner.nextLine();
             while(scanner.hasNextLine()){
                persistTeamAndDrivers(scanner.nextLine().split(";"));
